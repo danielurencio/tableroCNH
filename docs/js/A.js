@@ -97,3 +97,18 @@ svg.append("g")
       return "translate(" + offset  + "," + height/2 + ")"
     }
   });
+
+
+var val;
+function personas() {
+  d3.csv("docs/personas.csv", function(data) {
+    val = d3.nest()
+     .key(function(d) { return d["UNIDAD DE ADSCRIPCIÓN"]; })
+     .key(function(d) { return d["ÁREA DE ADSCRIPCIÓN"]; })
+     .key(function(d) { return d["SEXO"]; })
+     .key(function(d) { return d["ESCOLARIDAD"] })
+     .entries(data)
+  });
+}
+
+personas();
