@@ -47,21 +47,30 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("personas.json", function(error, flare) {
-  if (error) throw error;
-
-  root = flare;
-  root.x0 = height / 2;
-  root.y0 = 0;
-
   function collapse(d) {
-    if (d.children) {
+    if (d.children) { 
       d._children = d.children;
       d._children.forEach(collapse);
       d.children = null;
     }
   }
 
+
+d3.json("personas.json", function(error, flare) {
+  if (error) throw error;
+
+  root = flare;
+  root.x0 = height / 2;
+  root.y0 = 0;
+/*
+  function collapse(d) {
+    if (d.children) { 
+      d._children = d.children;
+      d._children.forEach(collapse);
+      d.children = null;
+    }
+  }
+*/
   root.children.forEach(collapse);
   update(root);
 });
@@ -172,11 +181,25 @@ function click(d) {
     d.children = d._children;
     d._children = null;
   }
+  // If the node has a parent, then collapse its child nodes
+  // except for this clicked node.
+  if (d.parent) {
+    d.parent.children.forEach(function(element) {
+      if (d !== element) {
+        collapse(element);
+      }
+    });
+  }
   update(d);
+
   var sel = d3.select(this)
   var id = sel.attr("id");
   console.log(sel);
+
+  d3.selectAll("g>text").attr("fill","black").attr("text-anchor","start")
+
   if(!sel.attr("classed") || !Number(sel.attr("classed")) ) {
+
 //console.log(d3.select("#" + id + ">text").style("font-size"))
 
     sel.attr("classed",1);
@@ -196,6 +219,7 @@ function click(d) {
       .attr("transform", "rotate(-5)")
       .attr("text-anchor","start")
   }
+
 }
 
 </script>

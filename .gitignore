@@ -1,3 +1,4 @@
 *.xlsx
 B.csv
 docs/node_modules
+docs/personas.json
