@@ -35,6 +35,7 @@ svg.append("g")
   .attr({
    "width": function(d) { return width * 0.1; }, // el 0.08 es la proporción de cuadro
    "height": "10",
+   "class": function(d) { return d.title; },
    "x": function(d,i) {
      var obj = d3.select(this);
      var w = obj.attr("width");
@@ -55,41 +56,16 @@ svg.append("g")
 	.attr("fill","black");
   })
   .on("click", function(d) {
-    if(d3.select("#subRect")) { 
-      var subRect = d3.select("#subRect");
-      subRect.transition().duration(500)
-	.attr("opacity",0)
-	.each("end", function() {
-	      subRect.remove();
-	})
-    }
+     var clase = d3.select(this).attr("class")
+     if( clase == "Personas" ) personas(d);
 
-    var color = d.color;
-
-    d3.select("#cuadros")
-      .transition().duration(1200)
-    .attr("transform","translate(" + width * 0.02+ "," + 0.02 + ")");
-
-    svg.append("rect")
-      .attr({
-        "id":"subRect", // >>>>> ID para desaparecer el cuadro
-	"x": width * 0.02,
-	"y": height * 0.08,
-	"width": 0,
-	"height": 0,
-	"fill": color,
-	"opacity":0.85,
-        "rx": 2
-       })
-	.transition().duration(1000)
-       .attr({
-	 "width": width - (width*0.25),
-	 "height":200
-	})
   });
 
   var W = document.getElementById("cuadros").getBoundingClientRect();
 
+///////////////////////////////////////////////
+// Centrar los cuadros del menú principal..
+//////////////////////////////////////////////
   d3.select("#cuadros").attr({
     "transform": function(d,i) {
       var w = d3.select(this).node().getBBox().width
@@ -99,16 +75,49 @@ svg.append("g")
   });
 
 
-var val;
-function personas() {
-  d3.csv("docs/personas.csv", function(data) {
-    val = d3.nest()
-     .key(function(d) { return d["UNIDAD DE ADSCRIPCIÓN"]; })
-     .key(function(d) { return d["ÁREA DE ADSCRIPCIÓN"]; })
-     .key(function(d) { return d["SEXO"]; })
-     .key(function(d) { return d["ESCOLARIDAD"] })
-     .entries(data)
-  });
+
+//////////////////////////////////////////////////////
+// Dinámica para menú personas
+///////////////////////////////////////////////
+function personas(d) {
+    if(d3.select("#subRect")) { 
+      var subRect = d3.select("#subRect");
+      subRect.transition().duration(500)
+	.attr("opacity",0)
+	.each("end", function() {
+	      subRect.remove();
+	})
+    }
+
+    d3.select("#mainTitle").remove();
+    
+    var color = d.color;
+
+    d3.select("#cuadros")
+      .transition().duration(1200)
+    .attr("transform","translate(" + width * 0.02+ "," + 0.02 + ")")
+    .attr("transform","scale(0.9)");
+
+
+// RECUADRO PARA GRÁFICOS ...
+  var extenCuadro = 0.5;
+    svg.append("g").append("rect")
+      .attr({
+        "id":"subRect", // >>>>> ID para desaparecer el cuadro
+	"x": width * extenCuadro,
+	"y": height * 0.04,
+	"width": 0,
+	"height": 0,
+	"fill": color,
+	"opacity":0.85,
+        "rx": 2
+       })
+	.transition().duration(1000)
+       .attr({
+	 "width": width - (width*extenCuadro),
+	 "height":height
+	})
+
+  
 }
 
-personas();

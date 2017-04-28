@@ -1,50 +1,3 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<style>
-
-.node {
-  cursor: pointer;
-}
-
-.node circle {
-  fill: #fff;
-  stroke: steelblue;
-  stroke-width: 0px;
-}
-
-.node text {
-  font: 10px sans-serif;
-}
-
-.link {
-  fill: none;
-  stroke: rgba(255,0,0,0.5);
-  stroke-width: 5px;
-}
-
-</style>
-<body>
-<script src="//d3js.org/d3.v3.min.js"></script>
-<script>
-
-var margin = {top: 20, right: 120, bottom: 20, left: 120},
-    width = 960 - margin.right - margin.left,
-    height = 600 - margin.top - margin.bottom;
-
-var i = 0,
-    duration = 750,
-    root;
-
-var tree = d3.layout.tree()
-    .size([height, width]);
-
-var diagonal = d3.svg.diagonal()
-    .projection(function(d) { return [d.y, d.x]; });
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.right + margin.left)
-    .attr("height", height + margin.top + margin.bottom)
-
 function dendrogram(svg) {
  var svg = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -58,7 +11,7 @@ function dendrogram(svg) {
   }
 
 
-d3.json("personas.json", function(error, flare) {
+d3.json("docs/personas.json", function(error, flare) {
   if (error) throw error;
 
   root = flare;
@@ -247,6 +200,3 @@ if(d.children != null) {
 */
 }
 }
-
-dendrogram(svg)
-</script>

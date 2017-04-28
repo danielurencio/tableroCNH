@@ -6,7 +6,7 @@ var data = d3.csv.parse(file);
 data = d3.nest()
      .key(function(d) { return d["UNIDAD DE ADSCRIPCIÓN"]; })
      .key(function(d) { return d["ÁREA DE ADSCRIPCIÓN"]; })
-     .key(function(d) { return d["SEXO"]; })
+//     .key(function(d) { return d["SEXO"]; })
      .key(function(d) { return d["ESCOLARIDAD"] })
      .key(function(d) { return d["CARRERA COMERCIAL/ SEC EJECUTIVA"] })
      .entries(data)
