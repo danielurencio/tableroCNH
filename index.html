@@ -29,6 +29,25 @@
 	src: url("docs/fonts/Roboto-Thin.ttf");
   }
 
+  .node {
+    cursor: pointer;
+  }
+
+  .node circle {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 0px;
+  }
+
+  .node text {
+    font: 12px afta;
+  }
+
+  .link {
+    fill: none;
+    stroke: rgba(255,85,53,0.65);
+    stroke-width: 2px;
+  }  
 
  </style>
  <script src="docs/js/d3.v3.min.js" charset="utf-8"></script>
@@ -37,7 +56,7 @@
 
  <body>
   <svg width="100%"></svg>
- <script src="docs/js/A.js"></script>
  <script src="docs/js/dendrogram.js"></script>
+ <script src="docs/js/A.js"></script>
  </body>
 </html>

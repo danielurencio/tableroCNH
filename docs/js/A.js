@@ -80,6 +80,8 @@ svg.append("g")
 // Dinámica para menú personas
 ///////////////////////////////////////////////
 function personas(d) {
+    if(d3.select(".dendo")) d3.select(".dendo").remove();
+
     if(d3.select("#subRect")) { 
       var subRect = d3.select("#subRect");
       subRect.transition().duration(500)
@@ -98,14 +100,23 @@ function personas(d) {
     .attr("transform","translate(" + width * 0.02+ "," + 0.02 + ")")
     .attr("transform","scale(0.9)");
 
+// RECUADRO PARA dendrograma
+ var dendo = svg.append("g")
+    .attr("class","dendo")
+//    .attr("width",width*0.5);
+
+  dendrogram(dendo,width,height*0.5);
+
+  d3.select(".dendo")
+    .attr("transform", "translate(" + width*.1 + "," + height*.1 + ")");
 
 // RECUADRO PARA GRÁFICOS ...
-  var extenCuadro = 0.5;
+  var extenCuadro = 0;
     svg.append("g").append("rect")
       .attr({
         "id":"subRect", // >>>>> ID para desaparecer el cuadro
 	"x": width * extenCuadro,
-	"y": height * 0.04,
+	"y": height * 0.6,
 	"width": 0,
 	"height": 0,
 	"fill": color,

@@ -1,6 +1,16 @@
-function dendrogram(svg) {
+function dendrogram(svg,width,height) {
+var i = 0,
+    duration = 750,
+    root;
+
+var tree = d3.layout.tree()
+    .size([height, width]);
+
+var diagonal = d3.svg.diagonal()
+    .projection(function(d) { return [d.y, d.x]; });
+
  var svg = svg.append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(120,0)");
 
   function collapse(d) {
     if (d.children) { 
@@ -200,3 +210,4 @@ if(d.children != null) {
 */
 }
 }
+
