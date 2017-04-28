@@ -1,4 +1,4 @@
-function dendrogram(svg,width,height) {
+function dendrogram(svg,width,height,flare,PERSONAS) {
 var i = 0,
     duration = 750,
     root;
@@ -20,9 +20,9 @@ var diagonal = d3.svg.diagonal()
     }
   }
 
-
-d3.json("docs/personas.json", function(error, flare) {
-  if (error) throw error;
+console.log("pedo")
+//d3.json("docs/personas.json", function(error, flare) {
+//  if (error) throw error;
 
   root = flare;
   root.x0 = height / 2;
@@ -38,7 +38,7 @@ d3.json("docs/personas.json", function(error, flare) {
 */
   root.children.forEach(collapse);
   update(root);
-});
+//});
 
 d3.select(self.frameElement).style("height", "800px");
 
@@ -66,7 +66,7 @@ function update(source) {
 	};
       })
       .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-      .on("click", click);
+      .on("click", function(d) { click(d) });
 
   nodeEnter.append("circle")
       .attr("r", 1e-6)
@@ -166,7 +166,12 @@ function click(d) {
   update(d);
 
   var sel = d3.select(this)
-  var id = sel.attr("id");
+  //var id = sel.attr("id");
+
+if(d3.select(".uno")) d3.select(".uno").remove()
+var nombre = d.name; console.log(nombre);
+var primerPie = {w:width*.34, h:height*.34}
+pieChart(d3.select("g.barra"),primerPie.w,primerPie.h,width*.24,height*1,"uno",PERSONAS,nombre)
 
 
   d3.selectAll(".node>text")
@@ -209,5 +214,6 @@ if(d.children != null) {
   }
 */
 }
+//console.log(d3.selectAll(".node"))
 }
 

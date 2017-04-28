@@ -1,11 +1,19 @@
 var width = document.body.clientWidth;
 var height = window.innerHeight;
 
+queue()
+  .defer(d3.csv, "docs/personas.csv")
+  .defer(d3.json,"docs/personas.json")
+  .await(ALL)
 
 var svg = d3.select("svg").attr({
 //  "width":"inherit",
   "height":height
 });
+
+function ALL(ERR,PERSONAS,flare) {
+
+//console.log(PERSONAS);
 
 svg.append("text")
   .attr({
@@ -105,14 +113,19 @@ function personas(d) {
     .attr("class","dendo")
 //    .attr("width",width*0.5);
 
-  dendrogram(dendo,width,height*0.5);
+  dendrogram(dendo,width,height*0.5,flare,PERSONAS);
+
+function calll() { console.log("!"); }
 
   d3.select(".dendo")
     .attr("transform", "translate(" + width*.1 + "," + height*.1 + ")");
 
 // RECUADRO PARA GRÁFICOS ...
+
   var extenCuadro = 0;
-    svg.append("g").append("rect")
+    var barra = svg.append("g").attr("class","barra");
+
+    barra.append("rect")
       .attr({
         "id":"subRect", // >>>>> ID para desaparecer el cuadro
 	"x": width * extenCuadro,
@@ -129,6 +142,13 @@ function personas(d) {
 	 "height":height
 	})
 
-  
+var primerPie = {w:width*.34, h:height*.34}
+//pieChart(svg,primerPie.w,primerPie.h,width*.24,height*.8,"uno",PERSONAS)
+
+
 }
+
+
+}
+
 
