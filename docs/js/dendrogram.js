@@ -171,8 +171,9 @@ function click(d) {
 if(d3.select(".uno")) d3.select(".uno").remove()
 var nombre = d.name; console.log(nombre);
 var primerPie = {w:width*.34, h:height*.34}
-pieChart(d3.select("g.barra"),primerPie.w,primerPie.h,width*.24,height*1,"uno",PERSONAS,nombre)
-
+var pie = d3.select("svg").append("g")//.attr("pieuno")
+pieChart(pie,primerPie.w,primerPie.h,width*.24,height*1,"uno",PERSONAS,nombre)
+d3.select(".uno").attr("transform","translate(" + width*.3 + "," + height *.8 + ")");
 
   d3.selectAll(".node>text")
 	.attr("fill","black")

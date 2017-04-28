@@ -41,10 +41,12 @@ function Unidad(data,nombre) {
 
  // var path = this.path;
 /////
-  svg.append("rect")
+/*  svg.append("rect")
     .attr({
 	"x": 0, "y":0, "width":20, "height":20, "id":"OFICIALÍA MAYOR"
      }).on("click",function() { var v = d3.select(this).attr("id"); change(data,v) })
+*/
+change(data,nombre)
 
 
   function change(data,nombre) {
@@ -61,5 +63,5 @@ function Unidad(data,nombre) {
     };
   }
 
-  d3.select("." + clase).attr("transform","translate(" + x + "," + y + ")");
+ // d3.select("." + clase).attr("transform","translate(" + x + "," + y + ")");
 }
