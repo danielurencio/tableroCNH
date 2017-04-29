@@ -27,15 +27,6 @@ console.log("pedo")
   root = flare;
   root.x0 = height / 2;
   root.y0 = 0;
-/*
-  function collapse(d) {
-    if (d.children) { 
-      d._children = d.children;
-      d._children.forEach(collapse);
-      d.children = null;
-    }
-  }
-*/
   root.children.forEach(collapse);
   update(root);
 //});
@@ -49,32 +40,57 @@ function update(source) {
       links = tree.links(nodes);
 
   // Normalize for fixed-depth.
-  nodes.forEach(function(d) { d.y = d.depth * 100; });  // qué significa el múltiplo?
+  nodes.forEach(function(d) { d.y = d.depth * 150; });  // qué significa el múltiplo?
 
   // Actualizar los nodos...
   var node = svg.selectAll("g.node")
       .data(nodes, function(d) { return d.id || (d.id = ++i); });
 
+  d3.selectAll(".node").attr("new","no")
   // Agregar nuevos nodos...
   var nodeEnter = node.enter().append("g")
       .attr("class", "node")
+      .attr("new","si")
       .attr("id", function(d,i) {
-	if(d.parent) { 
+        var count = 0;
+	if(d.parent) {
+          count++
 	  var parent = d.parent.name.split(" ").reduce(function sum(a,b) { return a + b; });
           var name = d.name.split(" ").reduce(function sum(a,b) { return a + b; });
 	  return (parent + "-" + name);
+//	  return ("a" + String(count));
 	};
       })
-      .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-      .on("click", function(d) { click(d) });
+    .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+      .on("click", function(d) {
+	click(d);
+	var idToSel = d3.select(this).attr("id");
+
+	// Desaparecer y reaparecer selección
+        d3.select("#" + idToSel + ">text")
+	.style("font-size",function(d) {
+	  return d._children ? "10px" : "0px";
+	});
+
+        d3.selectAll(".node>text")
+	 .attr("fill",function(d) {
+	   var capa = d3.select(this).attr("level");
+	   var W = d3.select(this).node().getBBox().width;
+           var NEW = d3.select(this.parentNode).attr("new")
+           if(NEW != "si" && d.name != "Estructura") return "rgba(0,0,0,0.2)"
+           if(NEW == "si") return "black"
+	 })
+
+      });
 
   nodeEnter.append("circle")
-      .attr("r", 1e-6)
+      .attr("r", 1)
       .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
 
   nodeEnter.append("text")
+      .attr("fill",function(d) { if(d.name!="Estructura") return "black"})
       .attr("tag","Estructura")
-      .attr("x",0)
+      .attr("x",function(d) { return d.name == "Estructura" ? -5 : 10 })
 //function(d) { return d.children || d._children ? -10 : 10; })
       .attr("dy", ".35em")
       .attr("text-anchor", function(d) {
@@ -82,10 +98,22 @@ function update(source) {
 	else return "start"
       })
       .style("font-size", function(d) {
-        if(d.name == "Estructura") return "20px";
+        if(d.name == "Estructura") return "20px"
+	else return "10px"
       })
       .text(function(d) { return d.name; })
-      .style("fill-opacity", 1e-6);
+      .style("fill-opacity", 1e-6)
+      .on("mouseover", function(d) {
+	if(d.name != "Estructura") {
+	  d3.select(this).transition().duration(200)
+	   .style("font-size","12px") }
+        })
+      .on("mouseout", function(d) {
+	if(d.name != "Estructura") {
+	  d3.select(this).transition()
+	  .duration(200).style("font-size","10px")
+	}
+      });
 
   // Transición de los nodos hacia sus nuevas posiciones...
   var nodeUpdate = node.transition()
@@ -147,6 +175,8 @@ function update(source) {
 
 // Al hacer click salen los "hijos" (children)...
 function click(d) {
+ 
+
   if (d.children) {
     d._children = d.children;
     d.children = null;
@@ -162,6 +192,7 @@ function click(d) {
         collapse(element);
       }
     });
+//    d3.selectAll(".node>text").style("font-size","100px")
   }
   update(d);
 
@@ -170,10 +201,15 @@ function click(d) {
 
 if(d3.select(".uno")) d3.select(".uno").remove()
 var nombre = d.name; console.log(nombre);
-var primerPie = {w:width*.34, h:height*.34}
-var pie = d3.select("svg").append("g")//.attr("pieuno")
-pieChart(pie,primerPie.w,primerPie.h,width*.24,height*1,"uno",PERSONAS,nombre)
-d3.select(".uno").attr("transform","translate(" + width*.3 + "," + height *.8 + ")");
+
+var pie = d3.select("svg").append("g").attr("class","uno")
+
+var WIDTH = window.innerWidth;
+var HEIGHT = window.innerHeight;
+var primerPie = {w:WIDTH*.34, h:HEIGHT*.34}
+
+pieChart(pie,primerPie.w,primerPie.h,(WIDTH*.3)-primerPie.w/2,HEIGHT*.8,"uno",PERSONAS,nombre)
+
 
   d3.selectAll(".node>text")
 	.attr("fill","black")
@@ -186,35 +222,9 @@ d3.select(".uno").attr("transform","translate(" + width*.3 + "," + height *.8 + 
 	  if(d.name == "Estructura") return "20px";
 	  else return "10px";
 	});
-//}
 
 
-/*
-  if( sel.attr("classed" == "0") {
-
-//console.log(d3.select("#" + id + ">text").style("font-size"))
-
-    sel.attr("classed",1);
-if(d.children != null) {
-    d3.select("#" + id + ">text")
-      .attr("fill","black")
-     .transition().duration(500)
-      .style("font-size","8px")
-      .attr("transform","rotate(5)")
-      .attr("text-anchor","start") // >> Aquí es donde se doblan las etiquetas de los nodos.
 }
-  }
-  else {
-    sel.attr("classed",0);
-    d3.select("#" + id + ">text")
-      .attr("fill","black")
-     .transition().duration(500)
-      .style("font-size","10px")
-      .attr("transform", "rotate(0)")
-      .attr("text-anchor","start")
-  }
-*/
-}
-//console.log(d3.selectAll(".node"))
+
 }
 

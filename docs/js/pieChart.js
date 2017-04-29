@@ -1,12 +1,12 @@
 function pieChart(svg,width,height,x,y,clase,data,nombre) {
   this.data = data;
-  var data = this.data; console.log(data)
+  var data = this.data;
   var svg = svg.append("g").attr("class",clase)
 //    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
   var radius = Math.min(width, height) / 2;
 
-  var color = d3.scale.category20(); console.log(color);
+  var color = d3.scale.category20();
 
   var pie = d3.layout.pie()
     .value(function(d) { return d.key; })
@@ -63,5 +63,5 @@ change(data,nombre)
     };
   }
 
- // d3.select("." + clase).attr("transform","translate(" + x + "," + y + ")");
+  d3.select("." + clase).attr("transform","translate(" + x + "," + y + ")");
 }

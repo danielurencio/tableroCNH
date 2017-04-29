@@ -66,7 +66,7 @@ svg.append("g")
   .on("click", function(d) {
      var clase = d3.select(this).attr("class")
      if( clase == "Personas" ) personas(d);
-
+     if(d3.select(".uno")) d3.select(".uno").remove();
   });
 
   var W = document.getElementById("cuadros").getBoundingClientRect();
