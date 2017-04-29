@@ -1,4 +1,15 @@
 function dendrogram(svg,width,height,flare,PERSONAS) {
+/*
+var mainSVG = d3.select("body>svg")
+var mainWIDTH = window.innerWidth;
+var mainHEIGHT = window.innerHeight;
+
+mainSVG.append("text")
+  .attr("x",mainWIDTH *.7)
+  .attr("y",mainHEIGHT *.8)
+  .text("pedo")
+*/
+
 var i = 0,
     duration = 750,
     root;
@@ -20,16 +31,13 @@ var diagonal = d3.svg.diagonal()
     }
   }
 
-console.log("pedo")
-//d3.json("docs/personas.json", function(error, flare) {
-//  if (error) throw error;
 
   root = flare;
   root.x0 = height / 2;
   root.y0 = 0;
   root.children.forEach(collapse);
   update(root);
-//});
+
 
 d3.select(self.frameElement).style("height", "800px");
 
@@ -63,7 +71,8 @@ function update(source) {
       })
     .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
       .on("click", function(d) {
-	click(d);
+        //console.log(d.depth) // << profundidad del árbol
+	click(d,d.depth);
 	var idToSel = d3.select(this).attr("id");
 
 	// Desaparecer y reaparecer selección
@@ -106,12 +115,40 @@ function update(source) {
       .on("mouseover", function(d) {
 	if(d.name != "Estructura") {
 	  d3.select(this).transition().duration(200)
-	   .style("font-size","12px") }
+	   .style("font-size","12px") 
+	   .attr("fill","rgba(0,0,0,0.75)")
+	}
+	////////////////////
+	/// DATOS INTERACTIVOS CON EL MOUSE
+	///////////////
+	  var profundidad = d.depth;
+	  if(profundidad == 1 ) {
+	   console.log(d)
+	    var p = PERSONAS
+		.filter(function(e) { return e["UNIDAD DE ADSCRIPCIÓN"] == d.name; }).length
+	    d3.select("#cambio1").text(p)
+	  }
+
+	  if(profundidad == 2) {
+	    var lic = PERSONAS
+		.filter(function(e) { return e["UNIDAD DE ADSCRIPCIÓN"] == d.parent.name; })
+		.filter(function(e) { return e["ÁREA DE ADSCRIPCIÓN"] == d.name; })
+		.filter(function(e) { return e["ESCOLARIDAD"] == "LICENCIATURA"; }).length;
+
+	    var mae = PERSONAS
+		.filter(function(e) { return e["UNIDAD DE ADSCRIPCIÓN"] == d.parent.name; })
+		.filter(function(e) { return e["ÁREA DE ADSCRIPCIÓN"] == d.name; })
+		.filter(function(e) { return e["ESCOLARIDAD"] == "MAESTRÍA"; }).length;
+
+		d3.select("#cambioLicenciatura").text(lic);
+		d3.select("#cambioMaestría").text(mae);
+	  }
         })
       .on("mouseout", function(d) {
 	if(d.name != "Estructura") {
 	  d3.select(this).transition()
 	  .duration(200).style("font-size","10px")
+	  .attr("fill","rgba(0,0,0,0.2)")
 	}
       });
 
@@ -174,7 +211,7 @@ function update(source) {
 }
 
 // Al hacer click salen los "hijos" (children)...
-function click(d) {
+function click(d,a) {
  
 
   if (d.children) {
@@ -199,16 +236,38 @@ function click(d) {
   var sel = d3.select(this)
   //var id = sel.attr("id");
 
-if(d3.select(".uno")) d3.select(".uno").remove()
-var nombre = d.name; console.log(nombre);
+////////////////////////////////////////////////////////////////////////////
+// LÓGICA PARA QUE PERMANEZCA EL PIE....
+if(d3.select(".uno") && a==1) { 
+ d3.selectAll(".uno").remove()
+ d3.selectAll("#leyenda1").remove()
+ d3.selectAll(".dos").remove()
+ d3.selectAll("#leyenda2").remove()
+}
 
-var pie = d3.select("svg").append("g").attr("class","uno")
+if(d3.select(".dos") && a==2) {
+ d3.selectAll(".dos").remove()
+ d3.selectAll("#leyenda2").remove()
+}
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+var nombre = d.name;
+
+var pie1 = d3.select("svg").append("g").attr("class","uno")
+var pie2 = d3.select("svg").append("g").attr("class","dos")
 
 var WIDTH = window.innerWidth;
 var HEIGHT = window.innerHeight;
 var primerPie = {w:WIDTH*.34, h:HEIGHT*.34}
+var leyenda ="Sexo"
+pieChart(pie1,primerPie.w,primerPie.h,(WIDTH*.3)-primerPie.w/2,HEIGHT*.8,"uno",PERSONAS,nombre,"Sexo por unidad",{profundidad:a})
 
-pieChart(pie,primerPie.w,primerPie.h,(WIDTH*.3)-primerPie.w/2,HEIGHT*.8,"uno",PERSONAS,nombre)
+var padreEhijo = { parent: d.parent.name, hijo:d.name }
+
+pieChartArea(pie2,primerPie.w,primerPie.h,(WIDTH*.5)-primerPie.w/2,HEIGHT*.8,"dos",PERSONAS,padreEhijo,"Sexo por área",{profundidad:a})
 
 
   d3.selectAll(".node>text")

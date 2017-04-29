@@ -35,6 +35,25 @@ var sections = [
  { title:"Regulación", color:"rgba(255,185,53," + opacity + ")" }
 ];
 
+////////////////////////////////////////////
+//////////// TÍTULO DE SECCIÓN
+//////////////////////////////////////////////
+
+     d3.select("svg").append("text").attr("class","SECCIÓN")
+	.attr("x",width*.99)
+	.attr("y",0)
+	.attr("alignment-baseline","text-before-edge")
+//	.style("fill", function(d) { return "red"; })
+	.attr("text-anchor","end")
+	.attr("font-family","afta")
+	.attr("font-size","80px")
+	.attr("opacity","0.6")
+	.text("")
+
+///////////////////////////////////////////////////7
+////////////
+////////////////////////////77777
+
 svg.append("g")
   .attr("id","cuadros")
   .selectAll("rect")
@@ -65,6 +84,12 @@ svg.append("g")
   })
   .on("click", function(d) {
      var clase = d3.select(this).attr("class")
+     var color = d3.select(this).attr("fill")
+	console.log(color)
+	d3.select(".SECCIÓN")
+	.style("fill",color)
+	.text(clase)
+
      if( clase == "Personas" ) personas(d);
      if(d3.select(".uno")) d3.select(".uno").remove();
   });
@@ -89,6 +114,8 @@ svg.append("g")
 ///////////////////////////////////////////////
 function personas(d) {
     if(d3.select(".dendo")) d3.select(".dendo").remove();
+    if(d3.selectAll(".NUMERILLOS")) d3.selectAll(".NUMERILLOS").remove()
+    if(d3.select(".barra")) d3.select(".barra").remove();
 
     if(d3.select("#subRect")) { 
       var subRect = d3.select("#subRect");
@@ -142,8 +169,103 @@ function calll() { console.log("!"); }
 	 "height":height
 	})
 
-var primerPie = {w:width*.34, h:height*.34}
-//pieChart(svg,primerPie.w,primerPie.h,width*.24,height*.8,"uno",PERSONAS)
+var mainSVG = d3.select("body>svg")
+var mainWIDTH = window.innerWidth;
+var mainHEIGHT = window.innerHeight;
+
+var Xcor = 0.6
+mainSVG.append("text")
+   .attr("id","cambio0").attr("class","NUMERILLOS")
+  .attr("x",mainWIDTH * Xcor)
+  .attr("y",mainHEIGHT *.7)
+  .attr("font-family","robotoThin")
+  .style("fill","white")
+  .attr("text-anchor","middle")
+  .attr("font-size","40px")
+  .text("Personas")
+
+mainSVG.append("text")
+   .attr("id","cambio0").attr("class","NUMERILLOS")
+  .attr("x",mainWIDTH *Xcor)
+  .attr("y",mainHEIGHT *.73)
+  .attr("font-family","robotoThin")
+  .style("fill","white")
+  .attr("text-anchor","middle")
+  .attr("font-size","20px")
+  .text("en Unidad")
+
+
+mainSVG.append("text")
+   .attr("id","cambio1").attr("class","NUMERILLOS")
+  .attr("x",mainWIDTH *Xcor)
+  .attr("y",mainHEIGHT *.90)
+  .attr("text-anchor","middle")
+  .attr("font-family","neue")
+  .style("fill","white")
+  .attr("font-size","120px")
+  .text("-")
+////////////////////////////////////////////////
+var Xcor1 = 0.8
+mainSVG.append("text")
+   .attr("id","cambio0").attr("class","NUMERILLOS")
+  .attr("x",mainWIDTH * Xcor1)
+  .attr("y",mainHEIGHT *.7)
+  .attr("font-family","robotoThin")
+  .style("fill","white")
+  .attr("text-anchor","middle")
+  .attr("font-size","40px")
+  .text("Grados")
+
+mainSVG.append("text")
+   .attr("id","cambio0").attr("class","NUMERILLOS")
+  .attr("x",mainWIDTH *Xcor1)
+  .attr("y",mainHEIGHT *.73)
+  .attr("font-family","robotoThin")
+  .style("fill","white")
+  .attr("text-anchor","middle")
+  .attr("font-size","20px")
+  .text("por Área")
+
+var Xcor2 = 0.78
+mainSVG.append("text")
+   .attr("id","cambio2").attr("class","NUMERILLOS")
+  .attr("x",mainWIDTH *Xcor2)
+  .attr("y",mainHEIGHT *.78)
+  .attr("text-anchor","middle")
+  .attr("font-family","neue")
+  .style("fill","white")
+  .attr("font-size","15px")
+  .text("Licenciatura:")
+
+mainSVG.append("text")
+   .attr("id","cambioLicenciatura").attr("class","NUMERILLOS")
+  .attr("x",mainWIDTH *.85)
+  .attr("y",mainHEIGHT *.78)
+  .attr("text-anchor","middle")
+  .attr("font-family","neue")
+  .style("fill","white")
+  .attr("font-size","15px")
+  .text("-")
+
+mainSVG.append("text")
+   .attr("id","cambio2").attr("class","NUMERILLOS")
+  .attr("x",mainWIDTH *Xcor2)
+  .attr("y",mainHEIGHT *.83)
+  .attr("text-anchor","middle")
+  .attr("font-family","neue")
+  .style("fill","white")
+  .attr("font-size","15px")
+  .text("Maestría:")
+
+mainSVG.append("text")
+   .attr("id","cambioMaestría").attr("class","NUMERILLOS")
+  .attr("x",mainWIDTH *.85)
+  .attr("y",mainHEIGHT *.83)
+  .attr("text-anchor","middle")
+  .attr("font-family","neue")
+  .style("fill","white")
+  .attr("font-size","15px")
+  .text("-")
 
 
 }
