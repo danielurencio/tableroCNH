@@ -123,7 +123,7 @@ function update(source) {
 	///////////////
 	  var profundidad = d.depth;
 	  if(profundidad == 1 ) {
-	   console.log(d)
+	  
 	    var p = PERSONAS
 		.filter(function(e) { return e["UNIDAD DE ADSCRIPCIÓN"] == d.name; }).length
 	    d3.select("#cambio1").text(p)

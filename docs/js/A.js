@@ -85,11 +85,11 @@ svg.append("g")
   .on("click", function(d) {
      var clase = d3.select(this).attr("class")
      var color = d3.select(this).attr("fill")
-	console.log(color)
+	
 	d3.select(".SECCIÓN")
 	.style("fill",color)
 	.text(clase)
-
+     clearAll(d)
      if( clase == "Personas" ) personas(d);
      if(d3.select(".uno")) d3.select(".uno").remove();
   });
@@ -107,12 +107,7 @@ svg.append("g")
     }
   });
 
-
-
-//////////////////////////////////////////////////////
-// Dinámica para menú personas
-///////////////////////////////////////////////
-function personas(d) {
+function clearAll(d) {
     if(d3.select(".dendo")) d3.select(".dendo").remove();
     if(d3.selectAll(".NUMERILLOS")) d3.selectAll(".NUMERILLOS").remove()
     if(d3.select(".barra")) d3.select(".barra").remove();
@@ -135,6 +130,35 @@ function personas(d) {
     .attr("transform","translate(" + width * 0.02+ "," + 0.02 + ")")
     .attr("transform","scale(0.9)");
 
+
+}
+
+
+//////////////////////////////////////////////////////
+// Dinámica para menú personas
+///////////////////////////////////////////////
+function personas(d) {
+/*    if(d3.select(".dendo")) d3.select(".dendo").remove();
+    if(d3.selectAll(".NUMERILLOS")) d3.selectAll(".NUMERILLOS").remove()
+    if(d3.select(".barra")) d3.select(".barra").remove();
+
+    if(d3.select("#subRect")) { 
+      var subRect = d3.select("#subRect");
+      subRect.transition().duration(500)
+	.attr("opacity",0)
+	.each("end", function() {
+	      subRect.remove();
+	})
+    }
+
+    d3.select("#mainTitle").remove();
+    
+
+    d3.select("#cuadros")
+      .transition().duration(1200)
+    .attr("transform","translate(" + width * 0.02+ "," + 0.02 + ")")
+    .attr("transform","scale(0.9)");
+*/
 // RECUADRO PARA dendrograma
  var dendo = svg.append("g")
     .attr("class","dendo")
@@ -148,6 +172,9 @@ function calll() { console.log("!"); }
     .attr("transform", "translate(" + width*.1 + "," + height*.1 + ")");
 
 // RECUADRO PARA GRÁFICOS ...
+
+    var color = d.color;
+
 
   var extenCuadro = 0;
     var barra = svg.append("g").attr("class","barra");
