@@ -310,6 +310,27 @@ function aprov(data) {
 // console.log(data);
 // var data = data.sort(function(a,b) { return a.value - b.value; });
 
+
+ d3.select("svg").append("text")
+	.attr("x",mW * .5)
+	.attr("y",mH*.4)
+	.attr("text-anchor","middle")
+	.attr("font-family","robotoThin")
+	.attr("font-size","30px")
+	.style("fill","rgba(0,0,0,0.7)")
+	.text("Valor:")
+
+ d3.select("svg").append("text")
+	.attr("id","VALOR")
+	.attr("x",mW * .5)
+	.attr("y",mH*.47)
+	.attr("text-anchor","middle")
+	.attr("font-family","robotoThin")
+	.attr("font-size","40px")
+	.style("fill","rgba(0,0,0,0.7)")
+	.text("-")
+
+
  var bars = d3.select("svg").append("g").attr("class","chart")
      .attr("id","aprovs");
 
@@ -331,7 +352,7 @@ function scatter(w,h) {
 
    var rad = d3.scale.linear()
 	      .domain(d3.extent(categorias, function(d) { return d["value"]; }))
-	      .range([5,100]);
+	      .range([5,80]);
     
     var x = d3.scale.linear()
               .domain([0, d3.max(categorias, function(d) { return d["units"]; })])
@@ -340,10 +361,31 @@ function scatter(w,h) {
     var y = d3.scale.linear()
     	      .domain([0, d3.max(categorias, function(d) { return d["proyectos"]; })])
     	      .range([ height, 0 ]);
+
+
+    d3.select(".bolitas").append("text")
+	.attr("transform","translate(" + 0 + "," + height + ")")
+	.attr("alignment-baseline","text-after-edge")
+	.attr("font-family","afta")
+	.attr("font-size","10px")
+        .text("Unidades involucradas");
+
  
     var chart = d3.select('.bolitas')
 	.attr('width', width + margin.right + margin.left)
 	.attr('height', height + margin.top + margin.bottom)
+
+
+    d3.select(".bolitas").append("text")
+//        .attr("transform","translate(" + 0 + ",0)")
+        .attr("alignment-baseline","text-before-edge")
+//	.attr("transform","rotate(90)")
+        .attr("font-family","afta")
+        .attr("font-size","10px")
+//        .attr("x,translate(" + width  + ",0)")
+//	.attr("transform","rotate(90)")
+	.attr("transform","translate(" +  width + ",0) rotate(90)")
+        .text("No.de aprovechamientos");
 
 
     chart  // <--- translate!
@@ -372,6 +414,8 @@ function scatter(w,h) {
 	.attr('class', 'main axis date')
 	.call(yAxis);
 
+
+
     var g = chart.append("svg:g"); 
     
     chart.selectAll("circle")
@@ -391,7 +435,7 @@ function scatter(w,h) {
 
 	//var mW = window.innerWidth
 	d3.select(".bolitas")
-	  .attr("transform","translate(" + mW*.55 + "," + mH*0.2 + ")");	
+	  .attr("transform","translate(" + mW*.5725 + "," + mH*0.2 + ")");	
 
 
 }
@@ -465,7 +509,13 @@ console.log(data)
 	    .on("mouseover", function(d) {
 		var name = d.name.split(" ").reduce(function sum(a,b) { return a + b; });
 		d3.select(".dot#" + name).attr("stroke","rgba(255,85,53,0.9)");
-	        d3.select(".dot#" + name).attr("stroke-width","3px");
+	        d3.select(".dot#" + name).attr("stroke-width","3px")
+		d3.select("#VALOR").text(function() {
+		  var name = d.name;
+		  var valor = categorias.filter(function(e) { return e.name == name; })
+		  valor = valor[0].value;
+		  return "$" + String(valor/1000) + "K";
+		})
 	     })
 	    .on("mouseout", function(d) {
 		var name = d.name.split(" ").reduce(function sum(a,b) { return a + b; });
