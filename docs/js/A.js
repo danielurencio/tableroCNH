@@ -1,5 +1,7 @@
 var width = document.body.clientWidth;
 var height = window.innerHeight;
+var mH = window.innerHeight;
+var mW = window.innerWidth
 
 queue()
   .defer(d3.csv, "docs/personas.csv")
@@ -304,12 +306,80 @@ mainSVG.append("text")
 
 function aprov(data) {
 // console.log(data);
+// var data = data.sort(function(a,b) { return a.value - b.value; });
+
  var bars = d3.select("svg").append("g").attr("class","chart")
-     .attr("id","aprovs")
+     .attr("id","aprovs");
+
+ var bolitas = d3.select("svg").append("g").attr("class","bolitas")
+     .attr("id","aprovs");
+
+function scatter(w,h) {
+    var data = [[5,3], [10,17], [15,4], [2,8]];
+   
+    var margin = {top: 20, right: 15, bottom: 60, left: 60}
+      , width = w- margin.left - margin.right
+      , height = h - margin.top - margin.bottom;
+    
+    var x = d3.scale.linear()
+              .domain([0, d3.max(data, function(d) { return d[0]; })])
+              .range([ 0, width ]);
+    
+    var y = d3.scale.linear()
+    	      .domain([0, d3.max(data, function(d) { return d[1]; })])
+    	      .range([ height, 0 ]);
+ 
+    var chart = d3.select('.bolitas')
+	.attr('width', width + margin.right + margin.left)
+	.attr('height', height + margin.top + margin.bottom)
+
+
+    chart  // <--- translate!
+	.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+	.attr('width', width)
+	.attr('height', height)
+
+        
+    // Eje X
+    var xAxis = d3.svg.axis()
+	.scale(x)
+	.orient('bottom');
+
+    chart.append('g')  // <-- translate!
+	.attr('transform', 'translate(0,' + height + ')')
+	.attr('class', 'main axis date')
+	.call(xAxis);
+
+    // Eje y
+    var yAxis = d3.svg.axis()
+	.scale(y)
+	.orient('right');
+
+    chart.append('g')
+	.attr('transform', 'translate(' + width + ',0)')
+	.attr('class', 'main axis date')
+	.call(yAxis);
+
+    var g = chart.append("svg:g"); 
+    
+    chart.selectAll("circle")
+      .data(data)
+      .enter().append("circle")
+          .attr("cx", function (d,i) { return x(d[0]); } )
+          .attr("cy", function (d) { return y(d[1]); } )
+          .attr("r", 8);
+
+	//var mW = window.innerWidth
+	d3.select(".bolitas")
+	  .attr("transform","translate(" + mW*.52 + "," + mH*0.2 + ")");	
+
+console.log("puchis")
+}
+scatter(mW*.4,mH*.75);
 
 
   function barChart(w,h,x,y) {
-	var margin = {top: 20, right: 30, bottom: 30, left: 40},
+	var margin = {top: 20, right: 15, bottom: 60, left: 60},
 	    width = w - margin.left - margin.right,
 	    height = h - margin.top - margin.bottom;
 
@@ -330,17 +400,26 @@ function aprov(data) {
 	var chart = d3.select(".chart")
 	    .attr("width", width + margin.left + margin.right)
 	    .attr("height", height + margin.top + margin.bottom)
-	  .append("g")
-	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	  .append("g") // <--translate! 1
+//	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	d3.csv("categorias.csv", type, function(error, data) {
-	  console.log(data)
+
+/*
+  bars.selectAll("circle").data(data).enter()
+	.append("circle")
+	.attr("cx",function(d,i) { return 300 + (20 * i); console.log(i) })
+	.attr("cy",function(d) { return 400; })
+	.attr("r", "20px")
+*/
+
+
 	  x.domain(data.map(function(d) { return d.name; }));
 	  y.domain([0, d3.max(data, function(d) { return d.value; })]);
 
 	  chart.append("g")
 	      .attr("class", "x axis")
-	      .attr("transform", "translate(0," + height + ")")
+	      .attr("transform", "translate(0," + height + ")") // <--translate! 2
 	      .call(xAxis)
 	    .selectAll("text")
 	      .attr("transform","rotate(-20)")
@@ -370,12 +449,12 @@ function aprov(data) {
 	}
 
 
-	var mW = window.innerWidth
+	//var mW = window.innerWidth
 	d3.select(".chart")
-	  .attr("transform","translate(" + mW* 0.05 + "," + height*0.2 + ")");console.log(width)	
+	  .attr("transform","translate(" + mW* 0.08 + "," + mH*0.2 + ")");	
   }
 
-  barChart(width*.4,height*.75);
+  barChart(mW*.4,mH*.75);
 
 }
 
