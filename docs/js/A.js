@@ -7,6 +7,7 @@ queue()
   .defer(d3.csv, "docs/personas.csv")
   .defer(d3.json,"docs/personas.json")
   .defer(d3.csv, "docs/aprov.csv")
+  .defer(d3.json, "cat.json")
   .await(ALL)
 
 var svg = d3.select("svg").attr({
@@ -14,7 +15,7 @@ var svg = d3.select("svg").attr({
   "height":height
 });
 
-function ALL(ERR,PERSONAS,flare,aprovechamientos) {
+function ALL(ERR,PERSONAS,flare,aprovechamientos,categorias) {
 
 //console.log(PERSONAS);
 
@@ -112,6 +113,7 @@ svg.append("g")
   });
 
 function clearAll(d) {
+    if(d3.select(".bolitas")) d3.select(".bolitas").remove();
     if(d3.select(".dendo")) d3.select(".dendo").remove();
     if(d3.selectAll(".NUMERILLOS")) d3.selectAll(".NUMERILLOS").remove()
     if(d3.select(".barra")) d3.select(".barra").remove();
@@ -315,18 +317,28 @@ function aprov(data) {
      .attr("id","aprovs");
 
 function scatter(w,h) {
-    var data = [[5,3], [10,17], [15,4], [2,8]];
-   
+    console.log(categorias);
+    var data = [{ "units":5,"proyectos":3}, { "units":10,"proyectos":17}, {"units":15,"proyectos":4}, {"units":2,"proyectos":8} ];
+  
+//   data = categorias;
+   if(typeof(categorias[0].units) != "number") {
+     categorias.forEach(function(d) { d.units = d.units.length; });
+   }
+ 
     var margin = {top: 20, right: 15, bottom: 60, left: 60}
       , width = w- margin.left - margin.right
       , height = h - margin.top - margin.bottom;
+
+   var rad = d3.scale.linear()
+	      .domain(d3.extent(categorias, function(d) { return d["value"]; }))
+	      .range([5,100]);
     
     var x = d3.scale.linear()
-              .domain([0, d3.max(data, function(d) { return d[0]; })])
+              .domain([0, d3.max(categorias, function(d) { return d["units"]; })])
               .range([ 0, width ]);
     
     var y = d3.scale.linear()
-    	      .domain([0, d3.max(data, function(d) { return d[1]; })])
+    	      .domain([0, d3.max(categorias, function(d) { return d["proyectos"]; })])
     	      .range([ height, 0 ]);
  
     var chart = d3.select('.bolitas')
@@ -363,17 +375,25 @@ function scatter(w,h) {
     var g = chart.append("svg:g"); 
     
     chart.selectAll("circle")
-      .data(data)
+      .data(categorias)
       .enter().append("circle")
-          .attr("cx", function (d,i) { return x(d[0]); } )
-          .attr("cy", function (d) { return y(d[1]); } )
-          .attr("r", 8);
+	  .attr("class","dot")
+	  .attr("id",function(d) {
+	    var name = d.name.split(" ").reduce(function sum(a,b) { return a + b; })
+	    return name;
+	  })
+          .attr("cx", function (d,i) { return x(d["units"]); } )
+          .attr("cy", function (d) { return y(d["proyectos"]); } )
+          .attr("r", function(d) { return rad(d.value); })
+	  .attr("fill", function(d) { 
+	    return "rgba(255,170,53,0.65)";
+	  });
 
 	//var mW = window.innerWidth
 	d3.select(".bolitas")
-	  .attr("transform","translate(" + mW*.52 + "," + mH*0.2 + ")");	
+	  .attr("transform","translate(" + mW*.55 + "," + mH*0.2 + ")");	
 
-console.log("puchis")
+
 }
 scatter(mW*.4,mH*.75);
 
@@ -404,7 +424,7 @@ scatter(mW*.4,mH*.75);
 //	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 	d3.csv("categorias.csv", type, function(error, data) {
-
+console.log(data)
 /*
   bars.selectAll("circle").data(data).enter()
 	.append("circle")
@@ -434,10 +454,23 @@ scatter(mW*.4,mH*.75);
 	      .data(data)
 	    .enter().append("rect")
 	      .attr("class", "bar")
+	      .attr("id", function(d) {
+		var name = d.name.split(" ").reduce(function sum(a,b) { return a + b; });
+		return name;
+	      })
 	      .attr("x", function(d) { return x(d.name); })
 	      .attr("y", function(d) { return y(d.value); })
 	      .attr("height", function(d) { return height - y(d.value); })
-	      .attr("width", x.rangeBand());
+	      .attr("width", x.rangeBand())
+	    .on("mouseover", function(d) {
+		var name = d.name.split(" ").reduce(function sum(a,b) { return a + b; });
+		d3.select(".dot#" + name).attr("stroke","rgba(255,85,53,0.9)");
+	        d3.select(".dot#" + name).attr("stroke-width","3px");
+	     })
+	    .on("mouseout", function(d) {
+		var name = d.name.split(" ").reduce(function sum(a,b) { return a + b; });
+		d3.select(".dot#" + name).attr("stroke","transparent");
+	    });
 	});
 
 
