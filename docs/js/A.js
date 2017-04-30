@@ -113,6 +113,8 @@ svg.append("g")
   });
 
 function clearAll(d) {
+    if(d3.select("#VALORtitle")) d3.select("#VALORtitle").remove();
+    if(d3.select("#VALOR")) d3.select("#VALOR").remove();
     if(d3.select(".bolitas")) d3.select(".bolitas").remove();
     if(d3.select(".dendo")) d3.select(".dendo").remove();
     if(d3.selectAll(".NUMERILLOS")) d3.selectAll(".NUMERILLOS").remove()
@@ -312,6 +314,7 @@ function aprov(data) {
 
 
  d3.select("svg").append("text")
+	.attr("id","VALORtitle")
 	.attr("x",mW * .5)
 	.attr("y",mH*.4)
 	.attr("text-anchor","middle")
