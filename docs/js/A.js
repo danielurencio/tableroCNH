@@ -4,6 +4,7 @@ var height = window.innerHeight;
 queue()
   .defer(d3.csv, "docs/personas.csv")
   .defer(d3.json,"docs/personas.json")
+  .defer(d3.csv, "docs/aprov.csv")
   .await(ALL)
 
 var svg = d3.select("svg").attr({
@@ -11,7 +12,7 @@ var svg = d3.select("svg").attr({
   "height":height
 });
 
-function ALL(ERR,PERSONAS,flare) {
+function ALL(ERR,PERSONAS,flare,aprovechamientos) {
 
 //console.log(PERSONAS);
 
@@ -91,6 +92,7 @@ svg.append("g")
 	.text(clase)
      clearAll(d)
      if( clase == "Personas" ) personas(d);
+     if( clase == "Aprovechamientos") aprov(aprovechamientos);
      if(d3.select(".uno")) d3.select(".uno").remove();
   });
 
@@ -111,7 +113,7 @@ function clearAll(d) {
     if(d3.select(".dendo")) d3.select(".dendo").remove();
     if(d3.selectAll(".NUMERILLOS")) d3.selectAll(".NUMERILLOS").remove()
     if(d3.select(".barra")) d3.select(".barra").remove();
-
+    if(d3.selectAll("#aprovs")) d3.selectAll("#aprovs").remove();
     if(d3.select("#subRect")) { 
       var subRect = d3.select("#subRect");
       subRect.transition().duration(500)
@@ -296,7 +298,86 @@ mainSVG.append("text")
 
 
 }
+///////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////APROVECHAMIENTOS///////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 
+function aprov(data) {
+// console.log(data);
+ var bars = d3.select("svg").append("g").attr("class","chart")
+     .attr("id","aprovs")
+
+
+  function barChart(w,h,x,y) {
+	var margin = {top: 20, right: 30, bottom: 30, left: 40},
+	    width = w - margin.left - margin.right,
+	    height = h - margin.top - margin.bottom;
+
+	var x = d3.scale.ordinal()
+	    .rangeRoundBands([0, width], .1);
+
+	var y = d3.scale.linear()
+	    .range([height, 0]);
+
+	var xAxis = d3.svg.axis()
+	    .scale(x)
+	    .orient("bottom");
+
+	var yAxis = d3.svg.axis()
+	    .scale(y)
+	    .orient("left");
+
+	var chart = d3.select(".chart")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	d3.csv("categorias.csv", type, function(error, data) {
+	  console.log(data)
+	  x.domain(data.map(function(d) { return d.name; }));
+	  y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
+	  chart.append("g")
+	      .attr("class", "x axis")
+	      .attr("transform", "translate(0," + height + ")")
+	      .call(xAxis)
+	    .selectAll("text")
+	      .attr("transform","rotate(-20)")
+	      .style("text-anchor","end")
+
+
+	  chart.append("g")
+	      .attr("class", "y axis")
+	      .call(yAxis);
+
+	  chart.selectAll(".bar")
+	      .data(data)
+	    .enter().append("rect")
+	      .attr("class", "bar")
+	      .attr("x", function(d) { return x(d.name); })
+	      .attr("y", function(d) { return y(d.value); })
+	      .attr("height", function(d) { return height - y(d.value); })
+	      .attr("width", x.rangeBand());
+	});
+
+
+	d3.selectAll(".x axis>g>text").remove()
+
+	function type(d) {
+	  d.value = +d.value; // coerce to number
+	  return d;
+	}
+
+
+	var mW = window.innerWidth
+	d3.select(".chart")
+	  .attr("transform","translate(" + mW* 0.05 + "," + height*0.2 + ")");console.log(width)	
+  }
+
+  barChart(width*.4,height*.75);
+
+}
 
 }
 

@@ -40,7 +40,7 @@
   }
 
   .node text {
-    font: 12px afta;
+    font: 12px robotoThin;
   }
 
   .link {
@@ -58,6 +58,32 @@
   input {
     margin: 0 7px;
   }
+
+.bar {
+  fill: rgba(255,170,53,0.7);
+}
+
+.bar:hover {
+  fill: rgba(255,170,53,1);
+  stroke: rgba(255,85,53,0.3);
+  stroke-width: 2px;
+}
+
+.axis {
+  font: 10px afta;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
 
  </style>
  <script src="docs/js/d3.v3.min.js" charset="utf-8"></script>
