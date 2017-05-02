@@ -86,7 +86,7 @@ function update(source) {
 	   var capa = d3.select(this).attr("level");
 	   var W = d3.select(this).node().getBBox().width;
            var NEW = d3.select(this.parentNode).attr("new")
-           if(NEW != "si" && d.name != "Estructura") return "rgba(0,0,0,0.2)"
+           if(NEW != "si" && d.name != "Estructura") return "rgba(0,0,0,0.35)"
            if(NEW == "si") return "black"
 	 })
 
@@ -116,7 +116,7 @@ function update(source) {
 	if(d.name != "Estructura") {
 	  d3.select(this).transition().duration(200)
 	   .style("font-size","12px") 
-	   .attr("fill","rgba(0,0,0,0.75)")
+	   .attr("fill","black")
 	}
 	////////////////////
 	/// DATOS INTERACTIVOS CON EL MOUSE
@@ -148,7 +148,7 @@ function update(source) {
 	if(d.name != "Estructura") {
 	  d3.select(this).transition()
 	  .duration(200).style("font-size","10px")
-	  .attr("fill","rgba(0,0,0,0.2)")
+	  .attr("fill","rgba(0,0,0,0.35)")
 	}
       });
 

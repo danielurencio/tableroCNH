@@ -33,10 +33,10 @@ svg.append("text")
 var opacity = 1;
 var sections = [
  { title:"Personas", color:"rgba(255,85,53," + opacity + ")" },
- { title:"Acuerdos", color:"rgba(255,115,53," + opacity + ")" },
- { title:"Presupuesto", color:"rgba(255,145,53," + opacity + ")" },
+// { title:"Acuerdos", color:"rgba(255,115,53," + opacity + ")" },
+// { title:"Presupuesto", color:"rgba(255,145,53," + opacity + ")" },
  { title:"Aprovechamientos", color:"rgba(255,170,53," + opacity + ")" },
- { title:"Regulación", color:"rgba(255,185,53," + opacity + ")" }
+// { title:"Regulación", color:"rgba(255,185,53," + opacity + ")" }
 ];
 
 ////////////////////////////////////////////
