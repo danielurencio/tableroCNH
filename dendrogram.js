@@ -115,7 +115,7 @@ function update(source) {
       .on("mouseover", function(d) {
 	if(d.name != "Estructura") {
 	  d3.select(this).transition().duration(200)
-	   .style("font-size","12px") 
+	   .style("font-size","15px") 
 	   .attr("fill","black")
 	}
 	////////////////////
